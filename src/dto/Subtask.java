@@ -1,7 +1,7 @@
 package dto;
 
 public class Subtask extends Task {
-    private int epicId;
+    private final int epicId;
 
     public Subtask(String taskName, String taskDescription, Status taskStatus, int epicId) {
         super(taskName, taskDescription, taskStatus);
@@ -15,10 +15,6 @@ public class Subtask extends Task {
 
     public int getEpicId() {
         return epicId;
-    }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
     }
 
     @Override
@@ -38,7 +34,8 @@ public class Subtask extends Task {
                 "её номер: '" + taskId + '\'' +
                 ", её название: '" + taskName + '\'' +
                 ", её описание: '" + taskDescription + '\'' +
-                ", её статус: " + subtaskStatusForPrint +
+                ", её статус: " + subtaskStatusForPrint + '\'' +
+                ", её эпик: " + epicId +
                 ')';
     }
 }

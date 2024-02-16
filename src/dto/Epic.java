@@ -3,10 +3,11 @@ package dto;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private final ArrayList<Integer> SubtasksId = new ArrayList<>();
+    private final ArrayList<Integer> subtasksId = new ArrayList<>();
 
-    public Epic(String taskName, String taskDescription, Status taskStatus) {
-        super(taskName, taskDescription, taskStatus);
+    // Удалил возможность передачи эпику статуса извне
+    public Epic(String taskName, String taskDescription) {
+        super(taskName, taskDescription, Status.NEW);
     }
 
     public Epic(String taskName, String taskDescription, int taskId) {
@@ -30,23 +31,24 @@ public class Epic extends Task {
                 "его номер: '" + taskId + '\'' +
                 ", его название: '" + taskName + '\'' +
                 ", его описание: '" + taskDescription + '\'' +
-                ", его статус: " + epicStatusForPrint +
+                ", его статус: " + epicStatusForPrint + '\'' +
+                ", его список подзадач: " + subtasksId +
                 ')';
     }
 
     public void addSubtaskId(Integer subtaskId) {
-        SubtasksId.add(subtaskId);
+        subtasksId.add(subtaskId);
     }
 
     public void removeSubtaskId(Integer subtaskId) {
-        SubtasksId.remove(subtaskId);
+        subtasksId.remove(subtaskId);
     }
 
     public void removeAllSubtasksId() {
-        SubtasksId.clear();
+        subtasksId.clear();
     }
 
     public ArrayList<Integer> getSubtasksId() {
-        return SubtasksId;
+        return subtasksId;
     }
 }

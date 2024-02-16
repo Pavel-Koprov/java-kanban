@@ -21,6 +21,7 @@ public class TaskManager {
     private void updateEpicStatus(Epic epic) {
 
         if (epic.getSubtasksId().isEmpty()) {
+            epic.setTaskStatus(Status.NEW);
             return;
         }
         int countInProgressSubtask = 0;
@@ -55,7 +56,7 @@ public class TaskManager {
         return new ArrayList<>(epics.values());
     }
 
-    public ArrayList<Subtask> getSubtask() {
+    public ArrayList<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
@@ -79,23 +80,14 @@ public class TaskManager {
 
     //2c. Получение всех типов задач по идентификатору
     public Task findTask(int taskId) {
-        if (!tasks.containsKey(taskId)) {
-            return null;
-        }
         return tasks.get(taskId);
     }
 
     public Epic findEpic(int epicId) {
-        if (!epics.containsKey(epicId)) {
-            return null;
-        }
         return epics.get(epicId);
     }
 
     public Subtask findSubtask(int subtaskId) {
-        if (!subtasks.containsKey(subtaskId)) {
-            return null;
-        }
         return subtasks.get(subtaskId);
     }
 
@@ -119,6 +111,9 @@ public class TaskManager {
     }
 
     public int saveSubtask(Subtask subtask) {
+        if (!epics.containsKey(subtask.getEpicId())) {
+            return -1;
+        }
         int subtaskId = createId();
         subtask.setTaskId(subtaskId);
         subtasks.put(subtaskId, subtask);
@@ -134,11 +129,7 @@ public class TaskManager {
     //2e. Обновление всех типов задач
     public void updateTask(Task newTask) {
         if (tasks.containsKey(newTask.getTaskId())) {
-            Task savedTask = tasks.get(newTask.getTaskId());
-
-            savedTask.setTaskName(newTask.getTaskName());
-            savedTask.setTaskDescription(newTask.getTaskDescription());
-            savedTask.setTaskStatus(newTask.getTaskStatus());
+            tasks.put(newTask.getTaskId(), newTask);
         }
     }
 
@@ -152,25 +143,9 @@ public class TaskManager {
     }
 
     public void updateSubtask(Subtask newSubtask) {
-        if (subtasks.containsKey(newSubtask.getTaskId())) {
-            Subtask savedSubtask = subtasks.get(newSubtask.getTaskId());
-
-            savedSubtask.setTaskName(newSubtask.getTaskName());
-            savedSubtask.setTaskDescription(newSubtask.getTaskDescription());
-
-            Epic savedEpic = epics.get(savedSubtask.getEpicId());
-
-            savedSubtask.setEpicId(newSubtask.getEpicId());
-
-            savedEpic.removeSubtaskId(savedSubtask.getTaskId());
-            updateEpicStatus(savedEpic);
-
-            Epic newEpic = epics.get(savedSubtask.getEpicId());
-
-            savedSubtask.setTaskStatus(newSubtask.getTaskStatus());
-
-            newEpic.addSubtaskId(savedSubtask.getTaskId());
-            updateEpicStatus(newEpic);
+        if (subtasks.containsKey(newSubtask.getTaskId()) && epics.containsKey(newSubtask.getEpicId())) {
+            tasks.put(newSubtask.getTaskId(), newSubtask);
+            updateEpicStatus(epics.get(newSubtask.getEpicId()));
         }
     }
 
