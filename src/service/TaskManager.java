@@ -144,7 +144,7 @@ public class TaskManager {
 
     public void updateSubtask(Subtask newSubtask) {
         if (subtasks.containsKey(newSubtask.getTaskId()) && epics.containsKey(newSubtask.getEpicId())) {
-            tasks.put(newSubtask.getTaskId(), newSubtask);
+            subtasks.put(newSubtask.getTaskId(), newSubtask);
             updateEpicStatus(epics.get(newSubtask.getEpicId()));
         }
     }
