@@ -1,4 +1,4 @@
-package test;
+package test.dto;
 
 import dto.Epic;
 import org.junit.jupiter.api.Test;

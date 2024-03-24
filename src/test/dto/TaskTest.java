@@ -1,4 +1,4 @@
-package test;
+package test.dto;
 
 import dto.*;
 import org.junit.jupiter.api.Test;
@@ -30,15 +30,4 @@ class TaskTest {
         assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.get(0), "Задачи не совпадают.");
     }
-
-    @Test
-    void initializeManagers() {
-        TaskManager inMemoryTaskManager = Managers.getDefault();
-        HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
-
-        assertNotNull(inMemoryTaskManager, "Менеджер задач не создан.");
-        assertNotNull(inMemoryHistoryManager, "Менеджер истории не создан.");
-    }
-
-
 }

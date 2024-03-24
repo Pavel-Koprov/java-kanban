@@ -9,15 +9,19 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public void add(Task task) {
 
+        if (task == null) {
+            return;
+        }
         if (taskHistory.size() == 10) {
             taskHistory.remove(0);
         }
+
         Task copyTask = new Task(task.getTaskName(), task.getTaskDescription(), task.getTaskId(), task.getTaskStatus());
         taskHistory.add(copyTask);
     }
 
     @Override
     public ArrayList<Task> getHistory() {
-        return taskHistory;
+        return new ArrayList<>(taskHistory);
     }
 }
