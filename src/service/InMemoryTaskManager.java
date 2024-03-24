@@ -8,11 +8,13 @@ import dto.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TaskManager {
+public class InMemoryTaskManager implements TaskManager {
     private int id = 1;
     private final HashMap<Integer, Task> tasks = new HashMap<>();
     private final HashMap<Integer, Epic> epics = new HashMap<>();
     private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+
+    HistoryManager inMemoryHistoryManager = Managers.getDefaultHistory();
 
     private int createId() {
         return id++;
@@ -48,28 +50,34 @@ public class TaskManager {
     }
 
     // 2a. Получение списка всех типов задач
+    @Override
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
+    @Override
     public ArrayList<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
+    @Override
     public ArrayList<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
     //2b. Удаление всех типов задач.
+    @Override
     public void removeAllTasks() {
         tasks.clear();
     }
 
+    @Override
     public void removeAllEpics() {
         epics.clear();
         subtasks.clear();
     }
 
+    @Override
     public void removeAllSubtasks() {
         subtasks.clear();
 
@@ -79,19 +87,32 @@ public class TaskManager {
     }
 
     //2c. Получение всех типов задач по идентификатору
+    @Override
     public Task findTask(int taskId) {
-        return tasks.get(taskId);
+        Task task = tasks.get(taskId);
+        inMemoryHistoryManager.add(task);
+
+        return task;
     }
 
+    @Override
     public Epic findEpic(int epicId) {
-        return epics.get(epicId);
+        Epic epic = epics.get(epicId);
+        inMemoryHistoryManager.add(epic);
+
+        return epic;
     }
 
+    @Override
     public Subtask findSubtask(int subtaskId) {
-        return subtasks.get(subtaskId);
+        Subtask subtask = subtasks.get(subtaskId);
+        inMemoryHistoryManager.add(subtask);
+
+        return subtask;
     }
 
     // 2d. Сохранение всех типов задач
+    @Override
     public int saveTask(Task task) {
         int taskId = createId();
 
@@ -101,6 +122,7 @@ public class TaskManager {
         return taskId;
     }
 
+    @Override
     public int saveEpic(Epic epic) {
         int epicId = createId();
 
@@ -110,6 +132,7 @@ public class TaskManager {
         return epicId;
     }
 
+    @Override
     public int saveSubtask(Subtask subtask) {
         if (!epics.containsKey(subtask.getEpicId())) {
             return -1;
@@ -127,12 +150,14 @@ public class TaskManager {
     }
 
     //2e. Обновление всех типов задач
+    @Override
     public void updateTask(Task newTask) {
         if (tasks.containsKey(newTask.getTaskId())) {
             tasks.put(newTask.getTaskId(), newTask);
         }
     }
 
+    @Override
     public void updateEpic(Epic newEpic) {
         if (epics.containsKey(newEpic.getTaskId())) {
             Epic savedEpic = epics.get(newEpic.getTaskId());
@@ -142,6 +167,7 @@ public class TaskManager {
         }
     }
 
+    @Override
     public void updateSubtask(Subtask newSubtask) {
         if (subtasks.containsKey(newSubtask.getTaskId()) && epics.containsKey(newSubtask.getEpicId())) {
             subtasks.put(newSubtask.getTaskId(), newSubtask);
@@ -150,10 +176,12 @@ public class TaskManager {
     }
 
     //2f. Удаление всех типов задач по идентификатору
+    @Override
     public void removeTask(int taskId) {
         tasks.remove(taskId);
     }
 
+    @Override
     public void removeEpic(int epicId) {
         if (epics.containsKey(epicId)) {
             Epic removedEpic = epics.get(epicId);
@@ -165,6 +193,7 @@ public class TaskManager {
         }
     }
 
+    @Override
     public void removeSubtask(int subtaskId) {
         if (subtasks.containsKey(subtaskId)) {
             Subtask removedSubtask = subtasks.get(subtaskId);
@@ -178,6 +207,7 @@ public class TaskManager {
     }
 
     // 3a. Получение списка всех подзадач эпика
+    @Override
     public ArrayList<Subtask> getEpicSubtasks(int epicId) {
 
         if (!epics.containsKey(epicId)) {
@@ -191,4 +221,4 @@ public class TaskManager {
         }
         return epicSubtasks;
     }
-}
+ }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private final ArrayList<Integer> subtasksId = new ArrayList<>();
 
-    // Удалил возможность передачи эпику статуса извне
     public Epic(String taskName, String taskDescription) {
         super(taskName, taskDescription, Status.NEW);
     }
