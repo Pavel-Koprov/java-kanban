@@ -6,6 +6,8 @@ import dto.Task;
 import service.Managers;
 import service.TaskManager;
 
+import java.sql.SQLOutput;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -47,7 +49,7 @@ public class Main {
         System.out.println(inMemoryTaskManager.getEpicSubtasks(idOfEpic1));
         System.out.println(inMemoryTaskManager.getEpicSubtasks(idOfEpic2));
 
-        // 3. Измените статусы созданных объектов, распечатайте их
+        /*// 3. Измените статусы созданных объектов, распечатайте их
         Task newTask1 = new Task("Оплатить курс",
                 "Необходимо накопить денег для ежемесячной оплаты", idOfTask1, Status.NEW);
         inMemoryTaskManager.updateTask(newTask1);
@@ -89,6 +91,6 @@ public class Main {
         System.out.println(inMemoryTaskManager.getEpics());
         System.out.println(inMemoryTaskManager.getSubtasks());
         System.out.println(inMemoryTaskManager.getEpicSubtasks(idOfEpic1));
-        System.out.println(inMemoryTaskManager.getEpicSubtasks(idOfEpic2));
+        System.out.println(inMemoryTaskManager.getEpicSubtasks(idOfEpic2));*/
     }
 }

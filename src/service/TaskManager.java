@@ -5,6 +5,7 @@ import dto.Subtask;
 import dto.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     // 2a. Получение списка всех типов задач
@@ -52,5 +53,5 @@ public interface TaskManager {
     // 3a. Получение списка всех подзадач эпика
     ArrayList<Subtask> getEpicSubtasks(int epicId);
 
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }
