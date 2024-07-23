@@ -98,6 +98,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         for (Epic epic : epics.values()) {
             epic.removeAllSubtasksId();
+            epic.setTaskStatus(Status.NEW);
         }
     }
 

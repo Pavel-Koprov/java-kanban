@@ -62,7 +62,7 @@ public class InMemoryTaskManagerTest {
         List<Task> actualHistory3 = inMemoryTaskManager.getHistory();
         List<Task> history3 = Arrays.asList(task2, epic1, subtask2, subtask1);
 
-        Subtask NewTaskView = inMemoryTaskManager.findSubtask(idOfSubtask2);
+        Subtask newTaskView = inMemoryTaskManager.findSubtask(idOfSubtask2);
 
         List<Task> actualHistory4 = inMemoryTaskManager.getHistory();
         List<Task> history4 = Arrays.asList(task2, epic1, subtask1, subtask2);
