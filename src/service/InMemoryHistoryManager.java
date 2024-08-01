@@ -4,7 +4,6 @@ import dto.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final HashMap<Integer, Node> nodeMap = new HashMap<>();
@@ -13,10 +12,11 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node tail;
 
     public void add(Task task) {
-        remove(task.getTaskId());
+        if (nodeMap.containsKey(task.getTaskId())) {
+            remove(task.getTaskId());
+        }
         Node newNode = linkLast(task);
         nodeMap.put(task.getTaskId(), newNode);
-
     }
 
     private Node linkLast(Task task) {
@@ -25,6 +25,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (this.head == null) {
             this.head = newNode;
             this.tail = newNode;
+            newNode.data = task;
             newNode.prev = null;
             newNode.next = null;
         } else {
@@ -52,13 +53,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (node.prev == null && node.next == null) {
             this.head = null;
             this.tail = null;
-
         } else if (node.prev == null) {
             node.next.prev = null;
-            this.head = node;
+            this.head = node.next;
         } else if (node.next == null) {
             node.prev.next = null;
-            this.tail = node;
+            this.tail = node.prev;
         } else {
             node.prev.next = node.next;
             node.next.prev = node.prev;
@@ -67,17 +67,18 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public ArrayList<Task> getHistory() {
-        ArrayList<Task> taskHistory = new ArrayList<>();
-        if (head == null) {
-            return taskHistory;
-        }
-        taskHistory.add(head.data);
-        Node nextNode = head.next;
+        return getTasks();
+    }
 
-        while(nextNode != null) {
-            taskHistory.add(nextNode.data);
+    private ArrayList<Task> getTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        Node node = head;
+
+        while (node != null) {
+            tasks.add(node.data);
+            node = node.next;
         }
-        return taskHistory;
+        return tasks;
     }
 
     private static class Node {
