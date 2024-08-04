@@ -18,6 +18,11 @@ public class Subtask extends Task {
     }
 
     @Override
+    public TaskType getTaskType() {
+        return TaskType.SUBTASK;
+    }
+
+    @Override
     public String toString() {
         String subtaskStatusForPrint = "";
         switch (taskStatus) {

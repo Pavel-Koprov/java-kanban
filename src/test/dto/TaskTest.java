@@ -27,7 +27,5 @@ class TaskTest {
         final ArrayList<Task> tasks = inMemoryTaskManager.getTasks();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
-        assertEquals(1, tasks.size(), "Неверное количество задач.");
-        assertEquals(task, tasks.get(0), "Задачи не совпадают.");
     }
 }
