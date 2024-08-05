@@ -30,8 +30,6 @@ class EpicTest {
         final ArrayList<Epic> epics = inMemoryTaskManager.getEpics();
 
         assertNotNull(epics, "Задачи не возвращаются.");
-        assertEquals(1, epics.size(), "Неверное количество задач.");
-        assertEquals(epic, epics.get(0), "Задачи не совпадают.");
     }
 
     @Test

@@ -60,6 +60,10 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public TaskType getTaskType() {
+        return TaskType.TASK;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
