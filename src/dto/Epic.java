@@ -1,6 +1,7 @@
 package dto;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subtasksId = new ArrayList<>();
@@ -11,6 +12,11 @@ public class Epic extends Task {
 
     public Epic(String taskName, String taskDescription, int taskId) {
         super(taskName, taskDescription, taskId);
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
     }
 
     @Override
@@ -49,5 +55,40 @@ public class Epic extends Task {
 
     public ArrayList<Integer> getSubtasksId() {
         return subtasksId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Epic epic = (Epic) o;
+        return taskId == epic.taskId && Objects.equals(taskName, epic.taskName) &&
+                Objects.equals(taskDescription, epic.taskDescription) && taskStatus == epic.taskStatus
+                && Objects.equals(subtasksId, epic.subtasksId);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        if (taskName != null) {
+            hash = taskName.hashCode();
+        }
+        hash = hash * 31;
+
+        if (taskDescription != null) {
+            hash = hash + taskDescription.hashCode();
+        }
+        hash = hash * 31;
+
+        if (taskStatus != null) {
+            hash = hash + taskStatus.hashCode();
+        }
+        hash = hash + taskId;
+
+        if (subtasksId != null) {
+            hash = hash + subtasksId.hashCode();
+        }
+
+        return hash;
     }
 }

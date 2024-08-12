@@ -1,5 +1,7 @@
 package dto;
 
+import java.util.Objects;
+
 public class Subtask extends Task {
     private final int epicId;
 
@@ -15,6 +17,11 @@ public class Subtask extends Task {
 
     public int getEpicId() {
         return epicId;
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.SUBTASK;
     }
 
     @Override
@@ -37,5 +44,37 @@ public class Subtask extends Task {
                 ", её статус: " + subtaskStatusForPrint + '\'' +
                 ", её эпик: " + epicId +
                 ')';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subtask subtask = (Subtask) o;
+        return taskId == subtask.taskId && Objects.equals(taskName, subtask.taskName) &&
+                Objects.equals(taskDescription, subtask.taskDescription) && taskStatus == subtask.taskStatus
+                && epicId == subtask.epicId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        if (taskName != null) {
+            hash = taskName.hashCode();
+        }
+        hash = hash * 31;
+
+        if (taskDescription != null) {
+            hash = hash + taskDescription.hashCode();
+        }
+        hash = hash * 31;
+
+        if (taskStatus != null) {
+            hash = hash + taskStatus.hashCode();
+        }
+        hash = hash + taskId;
+        hash = hash + epicId;
+
+        return hash;
     }
 }
