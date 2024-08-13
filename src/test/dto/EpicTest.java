@@ -79,9 +79,8 @@ class EpicTest {
                 Status.NEW, idOfEpic1, LocalDateTime.now().plusMinutes(26), Duration.ofMinutes(1));
         int idOfSubtask1 = inMemoryTaskManager.saveSubtask(subtask1);
 
-        Subtask subtask2 = new Subtask("subtaskName2", "subtaskDescription2" +
-                "количества смен и доплаты в утреннее время", Status.NEW, idOfEpic1,
-                LocalDateTime.now().plusMinutes(28), Duration.ofMinutes(1));
+        Subtask subtask2 = new Subtask("subtaskName2", "subtaskDescription2", Status.NEW,
+                idOfEpic1, LocalDateTime.now().plusMinutes(28), Duration.ofMinutes(1));
         int idOfSubtask2 = inMemoryTaskManager.saveSubtask(subtask2);
 
         Epic epic2 = new Epic("epicName2", "epicDescription2");

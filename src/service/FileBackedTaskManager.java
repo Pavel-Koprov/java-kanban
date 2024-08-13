@@ -15,7 +15,8 @@ import java.time.format.DateTimeFormatter;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-    private static final String TYPE_OF_TASK_ENTRY = "id,type,name,status,description,startTime,duration,epic\n";
+    private static final String TYPE_OF_TASK_ENTRY = "id,type,name,status,description,startTime,duration,, endTime," +
+            "epic\n";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
     public FileBackedTaskManager(File file) {
         this.file = file;
@@ -89,9 +90,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 switch (task.getTaskType()) {
                     case TASK:
                         manager.tasks.put(task.getTaskId(), task);
+                        manager.prioritizedTasks.add(task);
                         break;
                     case SUBTASK:
                         manager.subtasks.put(task.getTaskId(), (Subtask) task);
+                        manager.prioritizedTasks.add(task);
                         break;
                     case EPIC:
                         manager.epics.put(task.getTaskId(), (Epic) task);
@@ -119,6 +122,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         task.getTaskDescription(),
                         task.getStartTime() != null ? task.getStartTime().format(DATE_TIME_FORMATTER) : "",
                         Long.toString(task.getDuration().toMinutes()),
+                        task.getEndTime() != null ? task.getEndTime().format(DATE_TIME_FORMATTER) : "",
                         null};
                 return (String.join(",", taskString) + "\n");
             case SUBTASK:
@@ -130,6 +134,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         subtask.getTaskDescription(),
                         subtask.getStartTime() != null ? subtask.getStartTime().format(DATE_TIME_FORMATTER) : "",
                         Long.toString(subtask.getDuration().toMinutes()),
+                        subtask.getEndTime() != null ? subtask.getEndTime().format(DATE_TIME_FORMATTER) : "",
                         Integer.toString(subtask.getEpicId())};
                 return (String.join(",", subtaskString) + "\n");
             case EPIC:
@@ -141,6 +146,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         epic.getTaskDescription(),
                         epic.getStartTime() != null ? epic.getStartTime().format(DATE_TIME_FORMATTER) : "",
                         Long.toString(epic.getDuration().toMinutes()),
+                        epic.getEndTime() != null ? epic.getEndTime().format(DATE_TIME_FORMATTER) : "",
                         null};
                 return (String.join(",", epicString) + "\n");
             default:
@@ -160,17 +166,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             startTime = LocalDateTime.parse(file[5], DATE_TIME_FORMATTER);
         }
         Duration duration = Duration.ofMinutes(Integer.parseInt(file[6]));
+        LocalDateTime endTime = null;
+        if (!file[7].isBlank()) {
+            endTime = LocalDateTime.parse(file[7], DATE_TIME_FORMATTER);
+        }
+
         Integer epicId = null;
 
         switch (taskType) {
             case SUBTASK:
-                epicId = Integer.parseInt(file[7]);
+                epicId = Integer.parseInt(file[8]);
                 Subtask subtask = new Subtask(taskName, taskDescription, id, taskStatus, epicId, startTime, duration);
                 subtask.setTaskId(id);
                 return subtask;
             case EPIC:
                 Epic epic = new Epic(taskName, taskDescription, id);
                 epic.setTaskStatus(taskStatus);
+                epic.setStartTime(startTime);
+                epic.setDuration(duration);
+                epic.setEndTime(endTime);
                 return epic;
             case TASK:
                 Task task = new Task(taskName, taskDescription, id, taskStatus, startTime, duration);

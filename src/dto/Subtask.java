@@ -66,7 +66,8 @@ public class Subtask extends Task {
         Subtask subtask = (Subtask) o;
         return taskId == subtask.taskId && Objects.equals(taskName, subtask.taskName) &&
                 Objects.equals(taskDescription, subtask.taskDescription) && taskStatus == subtask.taskStatus
-                && epicId == subtask.epicId;
+                && epicId == subtask.epicId && Objects.equals(startTime, subtask.startTime) &&
+                Objects.equals(duration, subtask.duration);
     }
 
     @Override
@@ -87,6 +88,16 @@ public class Subtask extends Task {
         }
         hash = hash + taskId;
         hash = hash + epicId;
+
+        if (startTime != null) {
+            hash = hash + startTime.hashCode();
+        }
+        hash = hash * 31;
+
+        if (duration != null) {
+            hash = hash + duration.hashCode();
+        }
+        hash = hash * 31;
 
         return hash;
     }

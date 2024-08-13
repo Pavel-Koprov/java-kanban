@@ -12,7 +12,7 @@ import java.util.List;
 import static dto.Status.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryTaskManagerTest {
+public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
     @Test
     void checkHistoryOfTasks() {

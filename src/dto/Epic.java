@@ -93,7 +93,8 @@ public class Epic extends Task {
         Epic epic = (Epic) o;
         return taskId == epic.taskId && Objects.equals(taskName, epic.taskName) &&
                 Objects.equals(taskDescription, epic.taskDescription) && taskStatus == epic.taskStatus
-                && Objects.equals(subtasksId, epic.subtasksId);
+                && Objects.equals(subtasksId, epic.subtasksId) && Objects.equals(startTime, epic.startTime) &&
+                Objects.equals(duration, epic.duration);
     }
 
     @Override
@@ -114,9 +115,17 @@ public class Epic extends Task {
         }
         hash = hash + taskId;
 
-        if (subtasksId != null) {
-            hash = hash + subtasksId.hashCode();
+        hash = hash + subtasksId.hashCode();
+
+        if (startTime != null) {
+            hash = hash + startTime.hashCode();
         }
+        hash = hash * 31;
+
+        if (duration != null) {
+            hash = hash + duration.hashCode();
+        }
+        hash = hash * 31;
 
         return hash;
     }

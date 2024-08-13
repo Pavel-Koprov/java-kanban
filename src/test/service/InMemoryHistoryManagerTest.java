@@ -25,7 +25,7 @@ public class InMemoryHistoryManagerTest {
         List<Task> historyList = historyManager.getHistory();
 
         assertEquals(1, historyList.size());
-        assertEquals(task1, historyManager.getHeadData());
+        assertEquals(task1, historyManager.getHistory().get(0));
     }
     @Test
     void shouldSaveInHistoryManagerOnlyTheLastVersionOfTask() {
@@ -40,7 +40,7 @@ public class InMemoryHistoryManagerTest {
         List<Task> historyList = historyManager.getHistory();
 
         assertEquals(1, historyList.size());
-        assertEquals(task1, historyManager.getHeadData());
+        assertEquals(task1, historyManager.getHistory().get(0));
     }
 
     @Test
