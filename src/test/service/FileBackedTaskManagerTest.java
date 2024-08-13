@@ -6,24 +6,26 @@ import dto.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static dto.Status.NEW;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 public class FileBackedTaskManagerTest {
 
     @Test
     void savedAndLoadedTasks () {
         TaskManager inMemoryTaskManager = Managers.getDefault();
 
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task = new Task("taskName", "taskDescription", NEW,
+                LocalDateTime.now().plusMinutes(44), Duration.ofMinutes(1));
         final int taskId = inMemoryTaskManager.saveTask(task);
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description");
+        Epic epic = new Epic("epicName", "epicDescription");
         final int epicId = inMemoryTaskManager.saveEpic(epic);
-        Subtask subtask = new Subtask("Test addNewEpic", "Test addNewEpic description",
-                NEW, epicId);
+        Subtask subtask = new Subtask("subtaskName", "subtaskDescription",
+                NEW, epicId, LocalDateTime.now().plusMinutes(46), Duration.ofMinutes(1));
         final int subtaskId = inMemoryTaskManager.saveSubtask(subtask);
 
         TaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(new File("Memory/StoringTasks.csv"));
@@ -42,7 +44,8 @@ public class FileBackedTaskManagerTest {
                 "TestFile.csv"));
         List<Task> emptyList = loadedManager.getTasks();
 
-        loadedManager.saveTask(new Task("Test addNewTask", "Test addNewTask description", NEW));
+        loadedManager.saveTask(new Task("taskName", "taskDescription", NEW,
+                LocalDateTime.now().plusMinutes(48), Duration.ofMinutes(1)));
         List<Task> notEmptyList = loadedManager.getTasks();
 
         assertEquals(0, emptyList.size(), "Файл не пустой.");

@@ -1,5 +1,8 @@
 package dto;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -7,25 +10,34 @@ public class Task {
     protected String taskDescription;
     protected int taskId;
     protected Status taskStatus;
+    protected LocalDateTime startTime;
+    protected Duration duration;
 
-    public Task(String taskName, String taskDescription, int taskId) {
+    public Task(String taskName, String taskDescription, int taskId, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskId = taskId;
         this.taskStatus = Status.NEW;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public Task(String taskName, String taskDescription, Status taskStatus) {
+    public Task(String taskName, String taskDescription, Status taskStatus, LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskStatus = taskStatus;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
-    public Task(String taskName, String taskDescription, int taskId, Status taskStatus) {
+    public Task(String taskName, String taskDescription, int taskId, Status taskStatus,
+                LocalDateTime startTime, Duration duration) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskId = taskId;
         this.taskStatus = taskStatus;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public String getTaskName() {
@@ -62,6 +74,10 @@ public class Task {
 
     public TaskType getTaskType() {
         return TaskType.TASK;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override
@@ -107,11 +123,37 @@ public class Task {
             case DONE:
                 taskStatusForPrint = "выполнена";
         }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+        String startTimeToString = "";
+
+        if (startTime != null) {
+            startTimeToString = startTime.format(formatter);
+        }
         return "Простая задача (" +
                 "её номер: '" + taskId + '\'' +
                 ", её название: '" + taskName + '\'' +
                 ", её описание: '" + taskDescription + '\'' +
                 ", её статус: " + taskStatusForPrint +
+                ", её время начала: " + startTimeToString + '\'' +
+                ", её продолжительность: " + duration.toMinutes() + " мин" + '\'' +
+                ", её время конца: " + getEndTime().format(formatter) + '\'' +
                 ')';
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 }

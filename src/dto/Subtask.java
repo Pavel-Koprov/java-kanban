@@ -1,17 +1,22 @@
 package dto;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.time.format.DateTimeFormatter;
 
 public class Subtask extends Task {
     private final int epicId;
 
-    public Subtask(String taskName, String taskDescription, Status taskStatus, int epicId) {
-        super(taskName, taskDescription, taskStatus);
+    public Subtask(String taskName, String taskDescription, Status taskStatus, int epicId,
+                   LocalDateTime startTime, Duration duration) {
+        super(taskName, taskDescription, taskStatus, startTime, duration);
         this.epicId = epicId;
     }
 
-    public Subtask(String taskName, String taskDescription, int taskId, Status taskStatus, int epicId) {
-        super(taskName, taskDescription, taskId, taskStatus);
+    public Subtask(String taskName, String taskDescription, int taskId, Status taskStatus, int epicId,
+                   LocalDateTime startTime, Duration duration) {
+        super(taskName, taskDescription, taskId, taskStatus, startTime, duration);
         this.epicId = epicId;
     }
 
@@ -37,12 +42,20 @@ public class Subtask extends Task {
             case DONE:
                 subtaskStatusForPrint = "выполнена";
         }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+        String startTimeToString = "";
+        if (startTime != null) {
+            startTimeToString = startTime.format(formatter);
+        }
         return "    Подзадача (" +
                 "её номер: '" + taskId + '\'' +
                 ", её название: '" + taskName + '\'' +
                 ", её описание: '" + taskDescription + '\'' +
                 ", её статус: " + subtaskStatusForPrint + '\'' +
                 ", её эпик: " + epicId +
+                ", её время начала: " + startTimeToString + '\'' +
+                ", её продолжительность: " + duration.toMinutes() + " мин" + '\'' +
+                ", её время конца: " + getEndTime().format(formatter) + '\'' +
                 ')';
     }
 

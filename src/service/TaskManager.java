@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface TaskManager {
     // 2a. Получение списка всех типов задач
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
     //2b. Удаление всех типов задач.
     void removeAllTasks();
@@ -51,7 +51,7 @@ public interface TaskManager {
     void removeSubtask(int subtaskId);
 
     // 3a. Получение списка всех подзадач эпика
-    ArrayList<Subtask> getEpicSubtasks(int epicId);
+    List<Subtask> getEpicSubtasks(int epicId);
 
     List<Task> getHistory();
 }

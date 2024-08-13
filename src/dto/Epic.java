@@ -1,17 +1,22 @@
 package dto;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
     private final ArrayList<Integer> subtasksId = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(String taskName, String taskDescription) {
-        super(taskName, taskDescription, Status.NEW);
+        super(taskName, taskDescription, Status.NEW, null, Duration.ofMinutes(0));
     }
 
     public Epic(String taskName, String taskDescription, int taskId) {
-        super(taskName, taskDescription, taskId);
+        super(taskName, taskDescription, taskId, null, Duration.ofMinutes(0));
+        endTime = null;
     }
 
     @Override
@@ -19,6 +24,13 @@ public class Epic extends Task {
         return TaskType.EPIC;
     }
 
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
     @Override
     public String toString() {
         String epicStatusForPrint = "";
@@ -32,12 +44,26 @@ public class Epic extends Task {
             case DONE:
                 epicStatusForPrint = "выполнен";
         }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+        String startTimeToString = "";
+        String endTimeToString = "";
+
+        if (startTime != null) {
+            startTimeToString = startTime.format(formatter);
+        }
+        if (endTime != null) {
+            endTimeToString = endTime.format(formatter);
+        }
         return "Эпик (" +
                 "его номер: '" + taskId + '\'' +
                 ", его название: '" + taskName + '\'' +
                 ", его описание: '" + taskDescription + '\'' +
                 ", его статус: " + epicStatusForPrint + '\'' +
-                ", его список подзадач: " + subtasksId +
+                ", его список подзадач: " + subtasksId + '\'' +
+                ", его время начала: " + startTimeToString + '\'' +
+                ", его продолжительность: " + duration.toMinutes() + " мин" + '\'' +
+                ", его время конца: " + endTimeToString + '\'' +
                 ')';
     }
 
@@ -47,6 +73,9 @@ public class Epic extends Task {
 
     public void removeSubtaskId(Integer subtaskId) {
         subtasksId.remove(subtaskId);
+        setStartTime(null);
+        setDuration(Duration.ofMinutes(0));
+        setEndTime(null);
     }
 
     public void removeAllSubtasksId() {

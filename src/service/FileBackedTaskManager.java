@@ -9,10 +9,14 @@ import dto.TaskType;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    private File file;
-    private static final String TYPE_OF_TASK_ENTRY = "id,type,name,status,description,epic\n";
+    private final File file;
+    private static final String TYPE_OF_TASK_ENTRY = "id,type,name,status,description,startTime,duration,epic\n";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
     public FileBackedTaskManager(File file) {
         this.file = file;
     }
@@ -113,6 +117,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         task.getTaskName(),
                         task.getTaskStatus().toString(),
                         task.getTaskDescription(),
+                        task.getStartTime() != null ? task.getStartTime().format(DATE_TIME_FORMATTER) : "",
+                        Long.toString(task.getDuration().toMinutes()),
                         null};
                 return (String.join(",", taskString) + "\n");
             case SUBTASK:
@@ -122,6 +128,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         subtask.getTaskName(),
                         subtask.getTaskStatus().toString(),
                         subtask.getTaskDescription(),
+                        subtask.getStartTime() != null ? subtask.getStartTime().format(DATE_TIME_FORMATTER) : "",
+                        Long.toString(subtask.getDuration().toMinutes()),
                         Integer.toString(subtask.getEpicId())};
                 return (String.join(",", subtaskString) + "\n");
             case EPIC:
@@ -131,6 +139,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         epic.getTaskName(),
                         epic.getTaskStatus().toString(),
                         epic.getTaskDescription(),
+                        epic.getStartTime() != null ? epic.getStartTime().format(DATE_TIME_FORMATTER) : "",
+                        Long.toString(epic.getDuration().toMinutes()),
                         null};
                 return (String.join(",", epicString) + "\n");
             default:
@@ -145,12 +155,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String taskName = file[2];
         Status taskStatus = Status.valueOf(file[3].toUpperCase());
         String taskDescription = file[4];
+        LocalDateTime startTime = null;
+        if (!file[5].isBlank()) {
+            startTime = LocalDateTime.parse(file[5], DATE_TIME_FORMATTER);
+        }
+        Duration duration = Duration.ofMinutes(Integer.parseInt(file[6]));
         Integer epicId = null;
 
         switch (taskType) {
             case SUBTASK:
-                epicId = Integer.parseInt(file[5]);
-                Subtask subtask = new Subtask(taskName, taskDescription, id, taskStatus, epicId);
+                epicId = Integer.parseInt(file[7]);
+                Subtask subtask = new Subtask(taskName, taskDescription, id, taskStatus, epicId, startTime, duration);
                 subtask.setTaskId(id);
                 return subtask;
             case EPIC:
@@ -158,7 +173,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setTaskStatus(taskStatus);
                 return epic;
             case TASK:
-                Task task = new Task(taskName, taskDescription, id, taskStatus);
+                Task task = new Task(taskName, taskDescription, id, taskStatus, startTime, duration);
                 task.setTaskId(id);
                 return task;
             default:

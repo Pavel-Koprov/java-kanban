@@ -81,6 +81,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasks;
     }
 
+    @Override
+    public Task getHeadData() {
+        return head.data;
+    }
+
+
     private static class Node {
         Node prev;
         Node next;
