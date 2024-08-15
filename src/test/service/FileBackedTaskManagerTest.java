@@ -1,5 +1,6 @@
 package test.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.*;
 import dto.*;
@@ -13,7 +14,11 @@ import java.util.List;
 import static dto.Status.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>  {
+    @BeforeEach
+    public void beforeEach() {
+        taskManager = Managers.getFileBackedTaskManager();
+    }
 
     @Test
     void savedAndLoadedTasks () {

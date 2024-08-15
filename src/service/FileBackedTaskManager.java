@@ -5,6 +5,7 @@ import dto.Status;
 import dto.Subtask;
 import dto.Task;
 import dto.TaskType;
+import exceptions.ManagerException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,9 +16,9 @@ import java.time.format.DateTimeFormatter;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
-    private static final String TYPE_OF_TASK_ENTRY = "id,type,name,status,description,startTime,duration,, endTime," +
+    private static final String TYPE_OF_TASK_ENTRY = "id,type,name,status,description,startTime,duration,endTime," +
             "epic\n";
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
     public FileBackedTaskManager(File file) {
         this.file = file;
     }
@@ -120,9 +121,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         task.getTaskName(),
                         task.getTaskStatus().toString(),
                         task.getTaskDescription(),
-                        task.getStartTime() != null ? task.getStartTime().format(DATE_TIME_FORMATTER) : "",
+                        task.getStartTime() != null ? task.getStartTime()
+                                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
                         Long.toString(task.getDuration().toMinutes()),
-                        task.getEndTime() != null ? task.getEndTime().format(DATE_TIME_FORMATTER) : "",
+                        task.getEndTime() != null ? task.getEndTime()
+                                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
                         null};
                 return (String.join(",", taskString) + "\n");
             case SUBTASK:
@@ -132,9 +135,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         subtask.getTaskName(),
                         subtask.getTaskStatus().toString(),
                         subtask.getTaskDescription(),
-                        subtask.getStartTime() != null ? subtask.getStartTime().format(DATE_TIME_FORMATTER) : "",
+                        subtask.getStartTime() != null ? subtask.getStartTime()
+                                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
                         Long.toString(subtask.getDuration().toMinutes()),
-                        subtask.getEndTime() != null ? subtask.getEndTime().format(DATE_TIME_FORMATTER) : "",
+                        subtask.getEndTime() != null ? subtask.getEndTime()
+                                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
                         Integer.toString(subtask.getEpicId())};
                 return (String.join(",", subtaskString) + "\n");
             case EPIC:
@@ -144,9 +149,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         epic.getTaskName(),
                         epic.getTaskStatus().toString(),
                         epic.getTaskDescription(),
-                        epic.getStartTime() != null ? epic.getStartTime().format(DATE_TIME_FORMATTER) : "",
+                        epic.getStartTime() != null ? epic.getStartTime()
+                                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
                         Long.toString(epic.getDuration().toMinutes()),
-                        epic.getEndTime() != null ? epic.getEndTime().format(DATE_TIME_FORMATTER) : "",
+                        epic.getEndTime() != null ? epic.getEndTime()
+                                .format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
                         null};
                 return (String.join(",", epicString) + "\n");
             default:
@@ -163,12 +170,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String taskDescription = file[4];
         LocalDateTime startTime = null;
         if (!file[5].isBlank()) {
-            startTime = LocalDateTime.parse(file[5], DATE_TIME_FORMATTER);
+            startTime = LocalDateTime.parse(file[5], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         Duration duration = Duration.ofMinutes(Integer.parseInt(file[6]));
         LocalDateTime endTime = null;
         if (!file[7].isBlank()) {
-            endTime = LocalDateTime.parse(file[7], DATE_TIME_FORMATTER);
+            endTime = LocalDateTime.parse(file[7], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
 
         Integer epicId = null;
