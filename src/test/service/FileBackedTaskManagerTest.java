@@ -1,32 +1,39 @@
 package test.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.*;
 import dto.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static dto.Status.NEW;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-public class FileBackedTaskManagerTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager>  {
+    @BeforeEach
+    public void beforeEach() {
+        taskManager = Managers.getFileBackedTaskManager();
+    }
 
     @Test
     void savedAndLoadedTasks () {
-        TaskManager inMemoryTaskManager = Managers.getDefault();
+        InMemoryTaskManager inMemoryTaskManager = Managers.getInMemoryTaskManager();
 
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task = new Task("taskName", "taskDescription", NEW,
+                LocalDateTime.of(2024, 8, 13, 13, 0), Duration.ofMinutes(1));
         final int taskId = inMemoryTaskManager.saveTask(task);
-        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description");
+        Epic epic = new Epic("epicName", "epicDescription");
         final int epicId = inMemoryTaskManager.saveEpic(epic);
-        Subtask subtask = new Subtask("Test addNewEpic", "Test addNewEpic description",
-                NEW, epicId);
+        Subtask subtask = new Subtask("subtaskName", "subtaskDescription", NEW, epicId,
+                LocalDateTime.of(2024, 8, 13, 14, 0), Duration.ofMinutes(1));
         final int subtaskId = inMemoryTaskManager.saveSubtask(subtask);
 
-        TaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(new File("Memory/StoringTasks.csv"));
+        InMemoryTaskManager loadedTaskManager = FileBackedTaskManager.loadFromFile(new File("Memory/StoringTasks.csv"));
 
         assertEquals(inMemoryTaskManager.findTask(taskId), loadedTaskManager.findTask(taskId),
                 "Задачи не совпадают");
@@ -34,6 +41,8 @@ public class FileBackedTaskManagerTest {
                 "Эпики не совпадают");
         assertEquals(inMemoryTaskManager.findSubtask(subtaskId), loadedTaskManager.findSubtask(subtaskId),
                 "Подзадачи не совпадают");
+        assertEquals(task, inMemoryTaskManager.getPrioritizedTasks().get(0), "Неверный порядок задач в списке");
+        assertEquals(subtask, inMemoryTaskManager.getPrioritizedTasks().get(1), "Неверный порядок задач в списке");
     }
 
     @Test
@@ -42,7 +51,8 @@ public class FileBackedTaskManagerTest {
                 "TestFile.csv"));
         List<Task> emptyList = loadedManager.getTasks();
 
-        loadedManager.saveTask(new Task("Test addNewTask", "Test addNewTask description", NEW));
+        loadedManager.saveTask(new Task("taskName", "taskDescription", NEW,
+                LocalDateTime.now().plusMinutes(48), Duration.ofMinutes(1)));
         List<Task> notEmptyList = loadedManager.getTasks();
 
         assertEquals(0, emptyList.size(), "Файл не пустой.");

@@ -6,7 +6,10 @@ import service.HistoryManager;
 import service.Managers;
 import service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import static dto.Status.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +19,8 @@ class TaskTest {
     void addNewTask() {
         TaskManager inMemoryTaskManager = Managers.getDefault();
 
-        Task task = new Task("Test addNewTask", "Test addNewTask description", NEW);
+        Task task = new Task("taskName1", "taskDescription1", NEW,
+                LocalDateTime.now().plusMinutes(20), Duration.ofMinutes(1));
         final int taskId = inMemoryTaskManager.saveTask(task);
 
         final Task savedTask = inMemoryTaskManager.findTask(taskId);
@@ -24,7 +28,7 @@ class TaskTest {
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
 
-        final ArrayList<Task> tasks = inMemoryTaskManager.getTasks();
+        final List<Task> tasks = inMemoryTaskManager.getTasks();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
     }
