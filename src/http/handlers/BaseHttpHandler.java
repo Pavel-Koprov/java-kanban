@@ -1,13 +1,20 @@
-package HTTP.handlers;
+package http.handlers;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import HTTP.Endpoint;
+import http.Endpoint;
+import service.TaskManager;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public abstract class BaseHttpHandler implements HttpHandler {
+    protected TaskManager taskManager;
+    protected Gson gson;
+
+
     protected void sendText(HttpExchange exchange, int statusCode, String text) throws IOException {
         byte[] response = text.getBytes(StandardCharsets.UTF_8);
         exchange.getResponseHeaders().add("Content-Type", "application/json;charset=utf-8");
@@ -82,9 +89,13 @@ public abstract class BaseHttpHandler implements HttpHandler {
                     }
                 }
             case "history":
-                return Endpoint.GET_HISTORY;
+                if (requestMethod.equals("GET")) {
+                    return Endpoint.GET_HISTORY;
+                }
             case "prioritized":
-                return Endpoint.GET_PRIORITIZED;
+                if (requestMethod.equals("GET")) {
+                    return Endpoint.GET_PRIORITIZED;
+                }
             default:
                 return Endpoint.UNKNOWN;
         }

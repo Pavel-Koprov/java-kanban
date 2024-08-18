@@ -1,4 +1,4 @@
-package HTTP;
+package http;
 
 public enum Endpoint {
     GET_TASKS,

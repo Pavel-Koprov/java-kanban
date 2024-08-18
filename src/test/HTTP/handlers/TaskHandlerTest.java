@@ -19,9 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TaskHandlerTest extends HttpTaskServerTest {
 
-    protected TaskHandlerTest() throws IOException {
-    }
-
     @Test
     public void testGetListOfAllTasks() throws IOException, InterruptedException {
         Task task1 = new Task("taskName1", "taskDescription1", NEW,

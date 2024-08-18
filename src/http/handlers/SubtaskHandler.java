@@ -1,10 +1,10 @@
-package HTTP.handlers;
+package http.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.NotFoundException;
 import exceptions.TimeConflictException;
-import HTTP.Endpoint;
-import HTTP.HttpTaskServer;
+import http.Endpoint;
+import http.HttpTaskServer;
 import service.TaskManager;
 import dto.Subtask;
 import java.io.IOException;
@@ -12,10 +12,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 public class SubtaskHandler extends BaseHttpHandler {
-    private final TaskManager taskManager;
 
     public SubtaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        this.gson = HttpTaskServer.getGson();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class SubtaskHandler extends BaseHttpHandler {
     }
 
     private void handleGetSubtasks(HttpExchange exchange) throws IOException {
-        String response = HttpTaskServer.getGson().toJson(taskManager.getSubtasks());
+        String response = gson.toJson(taskManager.getSubtasks());
         sendText(exchange, 200, response);
     }
 
@@ -62,7 +62,7 @@ public class SubtaskHandler extends BaseHttpHandler {
                 sendText(exchange, 404, String.format("Подзадача с идентификатором %d не найдена", subtaskId));
                 return;
             }
-            String response = HttpTaskServer.getGson().toJson(subtask);
+            String response = gson.toJson(subtask);
             sendText(exchange, 200, response);
         } catch (NotFoundException e) {
             sendText(exchange, 404, e.getMessage());
@@ -122,7 +122,7 @@ public class SubtaskHandler extends BaseHttpHandler {
             || !body.contains("duration") || !body.contains("epicId")) {
             return Optional.empty();
         }
-        Subtask subtask = HttpTaskServer.getGson().fromJson(body, Subtask.class);
+        Subtask subtask = gson.fromJson(body, Subtask.class);
         return Optional.of(subtask);
     }
 }

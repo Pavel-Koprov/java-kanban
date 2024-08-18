@@ -1,10 +1,10 @@
-package HTTP.handlers;
+package http.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.NotFoundException;
 import exceptions.TimeConflictException;
-import HTTP.Endpoint;
-import HTTP.HttpTaskServer;
+import http.Endpoint;
+import http.HttpTaskServer;
 import service.TaskManager;
 import dto.Task;
 import java.io.IOException;
@@ -13,10 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class TaskHandler extends BaseHttpHandler {
-    private final TaskManager taskManager;
 
     public TaskHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        this.gson = HttpTaskServer.getGson();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TaskHandler extends BaseHttpHandler {
     }
 
     private void handleGetTasks(HttpExchange exchange) throws IOException {
-        String response = HttpTaskServer.getGson().toJson(taskManager.getTasks());
+        String response = gson.toJson(taskManager.getTasks());
         sendText(exchange, 200, response);
     }
 
@@ -64,7 +64,7 @@ public class TaskHandler extends BaseHttpHandler {
                 sendText(exchange, 404, String.format("Задача с идентификатором %d не найдена", taskId));
                 return;
             }
-            String response = HttpTaskServer.getGson().toJson(task);
+            String response = gson.toJson(task);
             sendText(exchange, 200, response);
         } catch (NotFoundException e) {
             sendText(exchange, 404, e.getMessage());
@@ -122,7 +122,7 @@ public class TaskHandler extends BaseHttpHandler {
             || !body.contains("startTime") || !body.contains("duration")) {
             return Optional.empty();
         }
-        Task task = HttpTaskServer.getGson().fromJson(body, Task.class);
+        Task task = gson.fromJson(body, Task.class);
         return Optional.of(task);
     }
 }

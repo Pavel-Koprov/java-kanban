@@ -1,8 +1,8 @@
-package HTTP.handlers;
+package http.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
-import HTTP.Endpoint;
-import HTTP.HttpTaskServer;
+import http.Endpoint;
+import http.HttpTaskServer;
 import service.TaskManager;
 import java.io.IOException;
 public class UserHandler extends BaseHttpHandler {
@@ -10,6 +10,7 @@ public class UserHandler extends BaseHttpHandler {
 
     public UserHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        this.gson = HttpTaskServer.getGson();
     }
 
     @Override
@@ -31,12 +32,12 @@ public class UserHandler extends BaseHttpHandler {
     }
 
     private void handleGetHistory(HttpExchange exchange) throws IOException {
-        String response = HttpTaskServer.getGson().toJson(taskManager.getHistory());
+        String response = gson.toJson(taskManager.getHistory());
         sendText(exchange, 200, response);
     }
 
     private void handleGetPrioritized(HttpExchange exchange) throws IOException {
-        String response = HttpTaskServer.getGson().toJson(taskManager.getPrioritizedTasks());
+        String response = gson.toJson(taskManager.getPrioritizedTasks());
         sendText(exchange, 200, response);
     }
 }

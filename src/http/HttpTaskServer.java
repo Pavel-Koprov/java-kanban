@@ -1,10 +1,10 @@
-package HTTP;
+package http;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
-import HTTP.handlers.*;
-import HTTP.adapters.*;
+import http.handlers.*;
+import http.adapters.*;
 import service.Managers;
 import service.TaskManager;
 import java.io.IOException;
@@ -15,10 +15,8 @@ import java.time.LocalDateTime;
 public class HttpTaskServer {
     public static final int PORT = 8080;
     private final HttpServer httpServer;
-    private final TaskManager taskManager;
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {
-        this.taskManager = taskManager;
         this.httpServer = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         this.httpServer.createContext("/tasks", new TaskHandler(taskManager));
         this.httpServer.createContext("/subtasks", new SubtaskHandler(taskManager));

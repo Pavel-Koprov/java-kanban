@@ -1,10 +1,10 @@
-package HTTP.handlers;
+package http.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import exceptions.NotFoundException;
 import exceptions.TimeConflictException;
-import HTTP.Endpoint;
-import HTTP.HttpTaskServer;
+import http.Endpoint;
+import http.HttpTaskServer;
 import service.TaskManager;
 import dto.Epic;
 import java.io.IOException;
@@ -12,10 +12,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 public class EpicHandler extends BaseHttpHandler {
-    private final TaskManager taskManager;
 
     public EpicHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
+        this.gson = HttpTaskServer.getGson();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EpicHandler extends BaseHttpHandler {
     }
 
     private void handleGetEpics(HttpExchange exchange) throws IOException {
-        String response = HttpTaskServer.getGson().toJson(taskManager.getEpics());
+        String response = gson.toJson(taskManager.getEpics());
         sendText(exchange, 200, response);
     }
 
@@ -65,7 +65,7 @@ public class EpicHandler extends BaseHttpHandler {
                 sendText(exchange, 404, String.format("Эпик с идентификатором %d не существует", epicId));
                 return;
             }
-            String response = HttpTaskServer.getGson().toJson(epic);
+            String response = gson.toJson(epic);
             sendText(exchange, 200, response);
         } catch (NotFoundException e) {
             sendText(exchange, 404, e.getMessage());
@@ -87,7 +87,7 @@ public class EpicHandler extends BaseHttpHandler {
                 sendText(exchange, 404, String.format("Эпик с идентификатором %d не найден", epicId));
                 return;
             }
-            String response = HttpTaskServer.getGson().toJson(taskManager.getEpicSubtasks(epicId));
+            String response = gson.toJson(taskManager.getEpicSubtasks(epicId));
             sendText(exchange, 200, response);
         } catch (NotFoundException e) {
             sendText(exchange, 404, e.getMessage());
@@ -144,7 +144,7 @@ public class EpicHandler extends BaseHttpHandler {
         if (!body.contains("taskName") || !body.contains("taskDescription")) {
             return Optional.empty();
         }
-        Epic epic = HttpTaskServer.getGson().fromJson(body, Epic.class);
+        Epic epic = gson.fromJson(body, Epic.class);
         return Optional.of(epic);
     }
 }

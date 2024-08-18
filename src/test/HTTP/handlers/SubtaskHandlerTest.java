@@ -17,9 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SubtaskHandlerTest extends HttpTaskServerTest {
 
-    protected SubtaskHandlerTest() throws IOException {
-    }
-
     @Test
     public void testGetListOfAllSubtasks() throws IOException, InterruptedException {
         Epic epic = new Epic("epicName", "epicDescription");
