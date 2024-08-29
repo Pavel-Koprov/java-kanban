@@ -42,10 +42,10 @@ public class Subtask extends Task {
             case DONE:
                 subtaskStatusForPrint = "выполнена";
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
         String startTimeToString = "";
         if (startTime != null) {
-            startTimeToString = startTime.format(formatter);
+            startTimeToString = startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         return "    Подзадача (" +
                 "её номер: '" + taskId + '\'' +
@@ -55,7 +55,7 @@ public class Subtask extends Task {
                 ", её эпик: " + epicId +
                 ", её время начала: " + startTimeToString + '\'' +
                 ", её продолжительность: " + duration.toMinutes() + " мин" + '\'' +
-                ", её время конца: " + getEndTime().format(formatter) + '\'' +
+                ", её время конца: " + getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + '\'' +
                 ')';
     }
 

@@ -135,11 +135,10 @@ public class Task {
                 taskStatusForPrint = "выполнена";
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String startTimeToString = "";
 
         if (startTime != null) {
-            startTimeToString = startTime.format(formatter);
+            startTimeToString = startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         return "Простая задача (" +
                 "её номер: '" + taskId + '\'' +
@@ -148,7 +147,7 @@ public class Task {
                 ", её статус: " + taskStatusForPrint +
                 ", её время начала: " + startTimeToString + '\'' +
                 ", её продолжительность: " + duration.toMinutes() + " мин" + '\'' +
-                ", её время конца: " + getEndTime().format(formatter) + '\'' +
+                ", её время конца: " + getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + '\'' +
                 ')';
     }
 

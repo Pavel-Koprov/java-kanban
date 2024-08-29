@@ -114,26 +114,35 @@ public class InMemoryTaskManager implements TaskManager {
     //2c. Получение всех типов задач по идентификатору
     @Override
     public Task findTask(int taskId) {
-        Task task = tasks.get(taskId);
-        inMemoryHistoryManager.add(task);
+        if (tasks.containsKey(taskId)) {
+            Task task = tasks.get(taskId);
+            inMemoryHistoryManager.add(task);
 
-        return task;
+            return task;
+        }
+        return null;
     }
 
     @Override
     public Epic findEpic(int epicId) {
-        Epic epic = epics.get(epicId);
-        inMemoryHistoryManager.add(epic);
+        if (epics.containsKey(epicId)) {
+            Epic epic = epics.get(epicId);
+            inMemoryHistoryManager.add(epic);
 
-        return epic;
+            return epic;
+        }
+        return null;
     }
 
     @Override
     public Subtask findSubtask(int subtaskId) {
-        Subtask subtask = subtasks.get(subtaskId);
-        inMemoryHistoryManager.add(subtask);
+        if (subtasks.containsKey(subtaskId)) {
+            Subtask subtask = subtasks.get(subtaskId);
+            inMemoryHistoryManager.add(subtask);
 
-        return subtask;
+            return subtask;
+        }
+        return null;
     }
 
     // 2d. Сохранение всех типов задач
@@ -323,6 +332,7 @@ public class InMemoryTaskManager implements TaskManager {
                         && newTask.getEndTime().isAfter(task.getStartTime()));
     }
 
+    @Override
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(prioritizedTasks);
     }

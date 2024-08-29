@@ -45,15 +45,14 @@ public class Epic extends Task {
                 epicStatusForPrint = "выполнен";
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
         String startTimeToString = "";
         String endTimeToString = "";
 
         if (startTime != null) {
-            startTimeToString = startTime.format(formatter);
+            startTimeToString = startTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         if (endTime != null) {
-            endTimeToString = endTime.format(formatter);
+            endTimeToString = endTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
         return "Эпик (" +
                 "его номер: '" + taskId + '\'' +
